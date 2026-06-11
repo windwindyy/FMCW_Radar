@@ -1,0 +1,12 @@
+fmcw_radar\main.o: ../Core/Src/main.c
+fmcw_radar\main.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f411xe.h
+fmcw_radar\main.o: ../Drivers/CMSIS/Include/core_cm4.h
+fmcw_radar\main.o: D:\Keil5\ARM\ARMCC\Bin\..\include\stdint.h
+fmcw_radar\main.o: ../Drivers/CMSIS/Include/cmsis_version.h
+fmcw_radar\main.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
+fmcw_radar\main.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
+fmcw_radar\main.o: ../Drivers/CMSIS/Include/mpu_armv7.h
+fmcw_radar\main.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h
+fmcw_radar\main.o: ../Core/Inc/system.h
+fmcw_radar\main.o: ../Core/Inc/spi.h
+fmcw_radar\main.o: ../Core/Inc/adf4350.h
