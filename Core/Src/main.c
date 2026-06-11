@@ -48,6 +48,13 @@
 
 #define PFD_KHZ             25000U
 #define MOD_VALUE           2500U
+
+// FMCW 距离计算参数
+#define C_LIGHT             299792458.0f
+#define SWEEP_BW_HZ         1800000000.0f   // 2200→4000MHz
+#define SWEEP_STEPS          180000U
+#define STEP_TIME_EST_US    5U
+#define SWEEP_T_S           ((float)SWEEP_STEPS * STEP_TIME_EST_US / 1000000.0f)
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -201,11 +208,16 @@ int main(void)
         if (adc_data_ready) {
             adc_data_ready = 0;
             FFT_Process(adc_dma_buf);
+            float fpeak = FFT_GetPeakFreq();
+            float dist = fpeak * C_LIGHT * SWEEP_T_S / (2.0f * SWEEP_BW_HZ);
+            uint32_t d10 = (uint32_t)(dist * 10.0f);
             OLED_ShowString(0, 0, "FMCW Radar V2");
             OLED_ShowString(0, 2, "Fpeak:       Hz");
-            OLED_ShowNum(7, 2, (uint32_t)FFT_GetPeakFreq(), 6);
-            OLED_ShowString(0, 4, "Mag:         ");
-            OLED_ShowNum(5, 4, (uint32_t)(FFT_GetPeakMagnitude() * 1000), 4);
+            OLED_ShowNum(7, 2, (uint32_t)fpeak, 6);
+            OLED_ShowString(0, 4, "Dist:       m");
+            OLED_ShowNum(6, 4, d10 / 10, 2);
+            OLED_ShowString(8, 4, ".");
+            OLED_ShowNum(9, 4, d10 % 10, 1);
             OLED_ShowString(0, 6, "Mode: SINGLE");
             OLED_Update();
         }
@@ -227,10 +239,15 @@ int main(void)
             if (adc_data_ready) {
                 adc_data_ready = 0;
                 FFT_Process(adc_dma_buf);
+                float f1 = FFT_GetPeakFreq();
+                float d1 = f1 * C_LIGHT * SWEEP_T_S / (2.0f * SWEEP_BW_HZ);
+                uint32_t d1_10 = (uint32_t)(d1 * 10.0f);
                 OLED_ShowString(0, 2, "Fpeak:       Hz");
-                OLED_ShowNum(7, 2, (uint32_t)FFT_GetPeakFreq(), 6);
-                OLED_ShowString(0, 4, "Mag:         ");
-                OLED_ShowNum(5, 4, (uint32_t)(FFT_GetPeakMagnitude() * 1000), 4);
+                OLED_ShowNum(7, 2, (uint32_t)f1, 6);
+                OLED_ShowString(0, 4, "Dist:       m");
+                OLED_ShowNum(6, 4, d1_10 / 10, 2);
+                OLED_ShowString(8, 4, ".");
+                OLED_ShowNum(9, 4, d1_10 % 10, 1);
                 OLED_Update();
             }
             for (uint32_t f = stop_khz - step_khz; f > start_khz; f -= step_khz) {
@@ -242,10 +259,15 @@ int main(void)
             if (adc_data_ready) {
                 adc_data_ready = 0;
                 FFT_Process(adc_dma_buf);
+                float f2 = FFT_GetPeakFreq();
+                float d2 = f2 * C_LIGHT * SWEEP_T_S / (2.0f * SWEEP_BW_HZ);
+                uint32_t d2_10 = (uint32_t)(d2 * 10.0f);
                 OLED_ShowString(0, 2, "Fpeak:       Hz");
-                OLED_ShowNum(7, 2, (uint32_t)FFT_GetPeakFreq(), 6);
-                OLED_ShowString(0, 4, "Mag:         ");
-                OLED_ShowNum(5, 4, (uint32_t)(FFT_GetPeakMagnitude() * 1000), 4);
+                OLED_ShowNum(7, 2, (uint32_t)f2, 6);
+                OLED_ShowString(0, 4, "Dist:       m");
+                OLED_ShowNum(6, 4, d2_10 / 10, 2);
+                OLED_ShowString(8, 4, ".");
+                OLED_ShowNum(9, 4, d2_10 % 10, 1);
                 OLED_Update();
             }
         }
